@@ -6,7 +6,8 @@ int score2 = 0;
 
 class Ball {
 public:
-  float x; float y;
+  float x;
+  float y;
   float radius;
   int v_x = 8, v_y = 8;
 
@@ -52,8 +53,8 @@ public:
     this->down_key = down_key;
   }
 
-  void draw() { 
-    DrawRectangleRounded( Rectangle{x, y, width, height}, 1, 10, WHITE);
+  void draw() {
+    DrawRectangleRounded(Rectangle{x, y, width, height}, 1, 10, WHITE);
   }
 
   void update() {
@@ -75,30 +76,32 @@ public:
 };
 
 void drawScore(void) {
-    DrawText(TextFormat("%i", score1), GetScreenWidth() / 4 - 40/2, 40, 40, WHITE);
-    DrawText(TextFormat("%i", score2), 3 * GetScreenWidth() / 4 - 40/2, 40, 40, WHITE);
+  DrawText(TextFormat("%i", score1), GetScreenWidth() / 4 - 40 / 2, 40, 40,
+           WHITE);
+  DrawText(TextFormat("%i", score2), 3 * GetScreenWidth() / 4 - 40 / 2, 40, 40,
+           WHITE);
 }
 
-void checkCollisionsBallBar(Ball& ball, Bar& bar1, Bar& bar2) {
+void checkCollisionsBallBar(Ball &ball, Bar &bar1, Bar &bar2) {
   if (CheckCollisionCircleRec(
-            Vector2{(float)ball.x, (float)ball.y}, ball.radius,
-            Rectangle{(float)bar1.x, (float)bar1.y, (float)bar1.width,
-                      (float)bar1.height})) {
-      if (ball.x - ball.radius <= bar1.x + bar1.width) {
-        ball.x = bar1.x + bar1.width + ball.radius;
-      }
-      ball.v_x = -ball.v_x;
+          Vector2{(float)ball.x, (float)ball.y}, ball.radius,
+          Rectangle{(float)bar1.x, (float)bar1.y, (float)bar1.width,
+                    (float)bar1.height})) {
+    if (ball.x - ball.radius <= bar1.x + bar1.width) {
+      ball.x = bar1.x + bar1.width + ball.radius;
     }
+    ball.v_x = -ball.v_x;
+  }
 
-    if (CheckCollisionCircleRec(
-            Vector2{(float)ball.x, (float)ball.y}, ball.radius,
-            Rectangle{(float)bar2.x, (float)bar2.y, (float)bar2.width,
-                      (float)bar2.height})) {
-      if (ball.x + ball.radius >= GetScreenWidth() - bar2.width) {
-        ball.x = bar2.x - bar2.width - ball.radius;
-      }
-      ball.v_x = -ball.v_x;
+  if (CheckCollisionCircleRec(
+          Vector2{(float)ball.x, (float)ball.y}, ball.radius,
+          Rectangle{(float)bar2.x, (float)bar2.y, (float)bar2.width,
+                    (float)bar2.height})) {
+    if (ball.x + ball.radius >= GetScreenWidth() - bar2.width) {
+      ball.x = bar2.x - bar2.width - ball.radius;
     }
+    ball.v_x = -ball.v_x;
+  }
 }
 
 void drawField(void) {
@@ -107,8 +110,8 @@ void drawField(void) {
   ClearBackground(DARKGREEN);
   DrawRectangle(center_x, 0, 2 * center_x, 2 * center_y, LIME);
   DrawCircle(center_x, center_y, 75, LIME);
-  DrawCircleSector(Vector2 {center_x, center_y}, 75, 90, -90, 80, DARKGREEN);
-  DrawLine(center_x, 0, center_x,2 * center_y, WHITE);
+  DrawCircleSector(Vector2{center_x, center_y}, 75, 90, -90, 80, DARKGREEN);
+  DrawLine(center_x, 0, center_x, 2 * center_y, WHITE);
 }
 
 int main() {
@@ -132,25 +135,30 @@ int main() {
 
   while (WindowShouldClose() == false) {
     BeginDrawing();
-      // draw field
-      drawField();
+    // draw field
+    drawField();
 
-      // draw and update ball end bars
-      ball.draw();
-      ball.update();
+    // draw and update ball end bars
+    ball.draw();
+    ball.update();
 
-      bar1.update();
-      bar1.draw();
+    bar1.update();
+    bar1.draw();
 
-      bar2.update();
-      bar2.draw();
+    bar2.update();
+    bar2.draw();
 
-      // check for collisions
-      checkCollisionsBallBar(ball, bar1, bar2);
+    // check for collisions
+    checkCollisionsBallBar(ball, bar1, bar2);
 
-      // draw score
-      drawScore();
+    // draw score
+    drawScore();
+
     EndDrawing();
+
+    if (IsKeyPressed(KEY_T)) {
+      TakeScreenshot("screenshot.png");
+    }
   }
 
   CloseWindow();
